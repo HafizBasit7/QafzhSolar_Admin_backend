@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-const adsController = require('../controllers/adsController');
-const { authToken, isAdmin } = require('../middlewares/auth');
+const adsController = require("../controllers/adsController");
+const { authToken, isAdmin } = require("../middlewares/auth");
 
 /**
  * @swagger
@@ -152,7 +152,7 @@ const { authToken, isAdmin } = require('../middlewares/auth');
  *       403:
  *         $ref: '#/components/responses/ForbiddenError'
  */
-router.post('/postads', authToken, isAdmin, adsController.postAds);
+router.post("/postads", authToken, isAdmin, adsController.postAds);
 
 /**
  * @swagger
@@ -244,7 +244,7 @@ router.post('/postads', authToken, isAdmin, adsController.postAds);
  *       403:
  *         $ref: '#/components/responses/ForbiddenError'
  */
-router.get('/get/allAds', authToken, isAdmin, adsController.getAllAds);
+router.get("/get/allAds", authToken, isAdmin, adsController.getAllAds);
 
 /**
  * @swagger
@@ -384,7 +384,7 @@ router.get('/get/allAds', authToken, isAdmin, adsController.getAllAds);
  *       404:
  *         $ref: '#/components/responses/NotFoundError'
  */
-router.patch('/update/:id', authToken, isAdmin, adsController.updateAd);
+router.put("/update/:id", authToken, isAdmin, adsController.updateAd);
 
 /**
  * @swagger
@@ -432,7 +432,7 @@ router.patch('/update/:id', authToken, isAdmin, adsController.updateAd);
  *       404:
  *         $ref: '#/components/responses/NotFoundError'
  */
-router.delete('/delete/:id', authToken, isAdmin, adsController.deleteAd);
+router.delete("/delete/:id", authToken, isAdmin, adsController.deleteAd);
 
 /**
  * @swagger
@@ -550,6 +550,6 @@ router.delete('/delete/:id', authToken, isAdmin, adsController.deleteAd);
  *               status: "fail"
  *               message: "No active advertisements found for this placement"
  */
-router.get('/placement/:placement', adsController.getAdsByPlacement);
+router.get("/placement/:placement", adsController.getAdsByPlacement);
 
 module.exports = router;

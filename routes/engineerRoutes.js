@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const engineerController = require('../controllers/engineerController');
-const { authToken, isAdmin } = require('../middlewares/auth');
+const engineerController = require("../controllers/engineerController");
+const { authToken, isAdmin } = require("../middlewares/auth");
 // middleware to check if user is admin
 
 /**
@@ -205,7 +205,7 @@ const { authToken, isAdmin } = require('../middlewares/auth');
  *       403:
  *         $ref: '#/components/responses/ForbiddenError'
  */
-router.post('/add', authToken, isAdmin, engineerController.addEngineer);
+router.post("/add", authToken, isAdmin, engineerController.addEngineer);
 
 /**
  * @swagger
@@ -348,7 +348,7 @@ router.post('/add', authToken, isAdmin, engineerController.addEngineer);
  *       403:
  *         $ref: '#/components/responses/ForbiddenError'
  */
-router.get('/get', authToken, isAdmin, engineerController.getAllEngineers);
+router.get("/get", authToken, isAdmin, engineerController.getAllEngineers);
 
 /**
  * @swagger
@@ -498,7 +498,12 @@ router.get('/get', authToken, isAdmin, engineerController.getAllEngineers);
  *       404:
  *         $ref: '#/components/responses/NotFoundError'
  */
-router.patch('/update/:id', authToken, isAdmin, engineerController.updateEngineer);
+router.put(
+  "/update/:id",
+  authToken,
+  isAdmin,
+  engineerController.updateEngineer
+);
 
 /**
  * @swagger
@@ -552,7 +557,12 @@ router.patch('/update/:id', authToken, isAdmin, engineerController.updateEnginee
  *               status: "fail"
  *               message: "Engineer not found with the provided ID"
  */
-router.delete('/delete/:id', authToken, isAdmin, engineerController.deleteEngineer);
+router.delete(
+  "/delete/:id",
+  authToken,
+  isAdmin,
+  engineerController.deleteEngineer
+);
 
 /**
  * @swagger
@@ -614,6 +624,11 @@ router.delete('/delete/:id', authToken, isAdmin, engineerController.deleteEngine
  *       404:
  *         $ref: '#/components/responses/NotFoundError'
  */
-router.patch('/toggle-status/:id', authToken, isAdmin, engineerController.toggleEngineerStatus);
+router.patch(
+  "/toggle-status/:id",
+  authToken,
+  isAdmin,
+  engineerController.toggleEngineerStatus
+);
 
 module.exports = router;

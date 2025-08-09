@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const { checkUserVerified } = require('../middlewares/checkUserVerified')
-const { authToken } = require('../middlewares/auth')
-const productController = require('../controllers/productController')
+const { checkUserVerified } = require("../middlewares/checkUserVerified");
+const { authToken } = require("../middlewares/auth");
+const productController = require("../controllers/productController");
 
 /**
  * @swagger
@@ -304,7 +304,7 @@ const productController = require('../controllers/productController')
  *               status: "fail"
  *               message: "Request payload too large. Reduce number of images or description length."
  */
-router.post('/post', checkUserVerified, productController.postProduct);
+router.post("/post", checkUserVerified, productController.postProduct);
 
 /**
  * @swagger
@@ -320,7 +320,7 @@ router.post('/post', checkUserVerified, productController.postProduct);
  *       2. OTP is sent to their phone
  *       3. User calls this endpoint with OTP and product data
  *       4. If OTP is valid, user is verified and product is posted
- *       
+ *
  *       **Note:** This is an alternative flow for users who haven't completed phone verification yet.
  *       **Image Handling:** Provide image URLs directly in the request body (no file upload).
  *     requestBody:
@@ -487,7 +487,7 @@ router.post('/post', checkUserVerified, productController.postProduct);
  *                   status: "fail"
  *                   message: "At least one valid image URL is required"
  */
-router.post('/verfiry-otp', productController.verifyOtp)
+router.post("/verfiry-otp", productController.verifyOtp);
 
 /**
  * @swagger
@@ -732,15 +732,19 @@ router.post('/verfiry-otp', productController.verifyOtp)
  *                   status: "fail"
  *                   message: "Invalid sortBy field. Must be one of: createdAt, price, name, views"
  */
-router.get('/browse-products', productController.browseProducts);
+router.get("/browse-products", productController.browseProducts);
 
 // Protected routes that require authentication
-router.get('/user-products', authToken, productController.getUserProducts);
+router.get("/user-products", authToken, productController.getUserProducts);
 
 // update product - requires authentication
-router.patch('/update-product/:id', authToken, productController.updateProduct);
+router.put("/update-product/:id", authToken, productController.updateProduct);
 
-// delete product - requires authentication  
-router.delete('/delete-product/:id', authToken, productController.deleteProduct);
+// delete product - requires authentication
+router.delete(
+  "/delete-product/:id",
+  authToken,
+  productController.deleteProduct
+);
 
 module.exports = router;

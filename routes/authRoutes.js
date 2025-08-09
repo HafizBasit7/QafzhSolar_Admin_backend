@@ -1,17 +1,17 @@
 // routes/auth.js
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
 // Import controllers
-const authController = require('../controllers/authController');
+const authController = require("../controllers/authController");
 
 // Import middleware
-const { authToken, isVerified, authRateLimit } = require('../middlewares/auth');
-const { 
-  validateUserRegistration, 
+const { authToken, isVerified, authRateLimit } = require("../middlewares/auth");
+const {
+  validateUserRegistration,
   validateOTPVerification,
-  validateUserProfileUpdate
-} = require('../middlewares/validation');
+  validateUserProfileUpdate,
+} = require("../middlewares/validation");
 
 // Rate limiting for auth endpoints
 const authLimiter = authRateLimit(15 * 60 * 1000, 60); // 5 attempts per 15 minutes
@@ -71,7 +71,7 @@ const authLimiter = authRateLimit(15 * 60 * 1000, 60); // 5 attempts per 15 minu
  *       429:
  *         $ref: '#/components/responses/RateLimitError'
  */
-router.post('/register', authLimiter, validateUserRegistration, authController.registerUser);
+router.post("/register", validateUserRegistration, authController.registerUser);
 
 /**
  * @swagger
@@ -142,7 +142,11 @@ router.post('/register', authLimiter, validateUserRegistration, authController.r
  *       429:
  *         $ref: '#/components/responses/RateLimitError'
  */
-router.post('/verify-otp/:phone', authLimiter, validateOTPVerification, authController.verifyOTP);
+router.post(
+  "/verify-otp/:phone",
+  validateOTPVerification,
+  authController.verifyOTP
+);
 
 /**
  * @swagger
@@ -193,7 +197,11 @@ router.post('/verify-otp/:phone', authLimiter, validateOTPVerification, authCont
  *       429:
  *         $ref: '#/components/responses/RateLimitError'
  */
-router.post('/request-otp', authLimiter, validateUserRegistration, authController.requestOTP);
+router.post(
+  "/request-otp",
+  validateUserRegistration,
+  authController.requestOTP
+);
 
 /**
  * @swagger
@@ -247,8 +255,8 @@ router.post('/request-otp', authLimiter, validateUserRegistration, authControlle
  *               status: "fail"
  *               message: "Invalid phone number format"
  */
-router.get('/check-phone', authController.checkPhone);
-router.post('/login', authController.login); // Removed rate limiter
+router.get("/check-phone", authController.checkPhone);
+router.post("/login", authController.login); // Removed rate limiter
 
 // Protected routes (require authentication)
 router.use(authToken); // All routes below require authentication
@@ -305,7 +313,7 @@ router.use(authToken); // All routes below require authentication
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  */
-router.get('/profile', authController.getProfile);
+router.get("/profile", authController.getProfile);
 
 /**
  * @swagger
@@ -367,7 +375,12 @@ router.get('/profile', authController.getProfile);
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  */
-router.put('/update-profile', authToken, validateUserProfileUpdate, authController.updateProfile);
+router.put(
+  "/update-profile",
+  authToken,
+  validateUserProfileUpdate,
+  authController.updateProfile
+);
 
 /**
  * @swagger
@@ -404,7 +417,7 @@ router.put('/update-profile', authToken, validateUserProfileUpdate, authControll
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  */
-router.post('/logout', authController.logout);
+router.post("/logout", authController.logout);
 
 // Routes that require verified phone
 router.use(isVerified); // All routes below require verified phone
@@ -457,6 +470,6 @@ router.use(isVerified); // All routes below require verified phone
  *               status: "fail"
  *               message: "Please verify your phone number before deleting account"
  */
-router.delete('/account', authController.deleteAccount);
+router.delete("/account", authController.deleteAccount);
 
 module.exports = router;

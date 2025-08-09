@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const shopController = require('../controllers/shopController');
-const { authToken, isAdmin } = require('../middlewares/auth');
+const shopController = require("../controllers/shopController");
+const { authToken, isAdmin } = require("../middlewares/auth");
 
 /**
  * @swagger
@@ -196,7 +196,7 @@ const { authToken, isAdmin } = require('../middlewares/auth');
  *       403:
  *         $ref: '#/components/responses/ForbiddenError'
  */
-router.post('/add', authToken, isAdmin, shopController.addShop);
+router.post("/add", authToken, isAdmin, shopController.addShop);
 
 /**
  * @swagger
@@ -358,7 +358,7 @@ router.post('/add', authToken, isAdmin, shopController.addShop);
  *       403:
  *         $ref: '#/components/responses/ForbiddenError'
  */
-router.get('/getAll', authToken, isAdmin, shopController.getAllShops);
+router.get("/getAll", authToken, isAdmin, shopController.getAllShops);
 
 /**
  * @swagger
@@ -502,7 +502,7 @@ router.get('/getAll', authToken, isAdmin, shopController.getAllShops);
  *       404:
  *         $ref: '#/components/responses/NotFoundError'
  */
-router.patch('/update/:id', authToken, isAdmin, shopController.updateShop);
+router.put("/update/:id", authToken, isAdmin, shopController.updateShop);
 
 /**
  * @swagger
@@ -557,7 +557,7 @@ router.patch('/update/:id', authToken, isAdmin, shopController.updateShop);
  *               status: "fail"
  *               message: "Shop not found with the provided ID"
  */
-router.delete('/delete/:id', authToken, isAdmin, shopController.deleteShop);
+router.delete("/delete/:id", authToken, isAdmin, shopController.deleteShop);
 
 /**
  * @swagger
@@ -626,6 +626,11 @@ router.delete('/delete/:id', authToken, isAdmin, shopController.deleteShop);
  *       404:
  *         $ref: '#/components/responses/NotFoundError'
  */
-router.patch('/toggle-status/:id', authToken, isAdmin, shopController.toggleShopStatus);
+router.put(
+  "/toggle-status/:id",
+  authToken,
+  isAdmin,
+  shopController.toggleShopStatus
+);
 
 module.exports = router;

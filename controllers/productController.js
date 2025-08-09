@@ -1,5 +1,5 @@
-const Product = require('../models/product');
-const User = require('../models/auth');
+const Product = require("../models/product");
+const User = require("../models/auth");
 // Called when user is already verified
 const postProduct = async (req, res) => {
   try {
@@ -8,57 +8,53 @@ const postProduct = async (req, res) => {
 
     const product = new Product({
       ...productData,
-      userId: user._id
+      userId: user._id,
     });
 
     await product.save();
 
     res.status(201).json({
-      msg: 'Product posted successfully',
-      product
+      msg: "Product posted successfully",
+      product,
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ msg: 'Failed to post product', error: err.message });
+    res.status(500).json({ msg: "Failed to post product", error: err.message });
   }
 };
-;
-
-
 // Called after user submits OTP
 const verifyOtp = async (req, res) => {
-  const {phone, otp } = req.body;
+  const { phone, otp } = req.body;
   console.log(req.body);
 
-
   if (!otp) {
-    return res.status(400).json({ msg: ' OTP required' });
+    return res.status(400).json({ msg: " OTP required" });
   }
   const user = await User.findOne({ phone });
-  if (!user) return res.status(404).json({ msg: 'User not found' });
+  if (!user) return res.status(404).json({ msg: "User not found" });
 
   if (user.otp !== otp || user.otpExpires < Date.now()) {
-    return res.status(400).json({ msg: 'Invalid or expired OTP' });
+    return res.status(400).json({ msg: "Invalid or expired OTP" });
   }
 
   user.isVerified = true;
   user.otp = null;
   user.otpExpires = null;
-  await user.save()
+  await user.save();
   res.status(201).json({
-    msg: 'OTP verified  successfully',
+    msg: "OTP verified  successfully",
   });
 };
 
 // updateProduct
 const updateProduct = async (req, res) => {
   try {
-    const user = req.user;
+    // const user = req.user;
     const productId = req.params.id;
     const updatedData = req.body;
 
     // Ensure product belongs to the current user
-    const product = await Product.findOne({ _id: productId, userId: user._id });
+    const product = await Product.findOne({ _id: productId });
 
     if (!product) {
       return res.status(404).json({ msg: "Product not found or unauthorized" });
@@ -73,12 +69,13 @@ const updateProduct = async (req, res) => {
 
     res.status(200).json({
       msg: "Product updated successfully",
-      updatedProduct
+      updatedProduct,
     });
-
   } catch (err) {
     console.error(err);
-    res.status(500).json({ msg: "Failed to update product", error: err.message });
+    res
+      .status(500)
+      .json({ msg: "Failed to update product", error: err.message });
   }
 };
 
@@ -89,55 +86,55 @@ const deleteProduct = async (req, res) => {
     const user = req.user;
     const productId = req.params.id;
 
-    console.log('🔐 deleteProduct - Request:', {
+    console.log("🔐 deleteProduct - Request:", {
       userId: user._id.toString(),
       productId,
-      userPhone: user.phone
+      userPhone: user.phone,
     });
 
     // Ensure product belongs to the current user
     const product = await Product.findOne({ _id: productId, userId: user._id });
 
-    console.log('🔐 deleteProduct - Product lookup:', {
+    console.log("🔐 deleteProduct - Product lookup:", {
       productFound: !!product,
       productOwnerId: product?.userId?.toString(),
-      matches: product?.userId?.toString() === user._id.toString()
+      matches: product?.userId?.toString() === user._id.toString(),
     });
 
     if (!product) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         status: 404,
-        message: "Product not found or you don't have permission to delete this product" 
+        message:
+          "Product not found or you don't have permission to delete this product",
       });
     }
 
     await Product.findByIdAndDelete(productId);
 
-    console.log('🔐 deleteProduct - Success:', { deletedProductId: productId });
+    console.log("🔐 deleteProduct - Success:", { deletedProductId: productId });
 
     res.status(200).json({
       status: 200,
       message: "Product deleted successfully",
       data: {
-        deletedProductId: productId
-      }
+        deletedProductId: productId,
+      },
     });
-
   } catch (err) {
-    console.error('🔐 deleteProduct - Error:', err);
-    res.status(500).json({ 
+    console.error("🔐 deleteProduct - Error:", err);
+    res.status(500).json({
       status: 500,
-      message: "Failed to delete product", 
-      error: err.message 
+      message: "Failed to delete product",
+      error: err.message,
     });
   }
 };
 
-// brower Products 
+// brower Products
 
 const browseProducts = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;   // Default page = 1
+    const page = parseInt(req.query.page) || 1; // Default page = 1
     const limit = parseInt(req.query.limit) || 10; // Default limit = 10
 
     // const filter = { status: 'approved' }; // Only approved listings
@@ -156,15 +153,11 @@ const browseProducts = async (req, res) => {
       currentPage: page,
       totalPages: Math.ceil(total / limit),
     });
-
   } catch (err) {
     console.error("Browse Error:", err);
-    res.status(500).json({ success: false, message: 'Server error' });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
-
-
-
 
 // brower products with filters
 // const browseFiltersProducts = async (req, res) => {
@@ -188,7 +181,6 @@ const browseProducts = async (req, res) => {
 //     if (governorate) filter.governorate = governorate;
 //     if (city) filter.city = city;
 //     if (price) filter.price = parseInt(price)
-
 
 //     const products = await Product.find(filter)
 //       .sort({ createdAt: -1 })
@@ -218,7 +210,7 @@ const getProductById = async (req, res) => {
     if (!id) {
       return res.status(400).json({
         status: 400,
-        message: "Invalid product ID"
+        message: "Invalid product ID",
       });
     }
 
@@ -227,22 +219,21 @@ const getProductById = async (req, res) => {
     if (!product) {
       return res.status(404).json({
         status: 404,
-        message: "product not found"
+        message: "product not found",
       });
     }
 
     res.status(200).json({
       status: 200,
       data: product,
-      message: "product fetched successfully"
+      message: "product fetched successfully",
     });
-
   } catch (error) {
     console.error("Error fetching product by ID:", error);
     res.status(500).json({
       status: 500,
       message: "Internal server error",
-      error: error.message
+      error: error.message,
     });
   }
 };
@@ -253,35 +244,35 @@ const getUserProducts = async (req, res) => {
     const { page = 1, limit = 10, status } = req.query;
     const authenticatedUser = req.user; // Get user from JWT token
 
-    console.log('🔐 getUserProducts - Token user:', {
+    console.log("🔐 getUserProducts - Token user:", {
       userId: authenticatedUser._id.toString(),
       userPhone: authenticatedUser.phone,
-      userRole: authenticatedUser.role
+      userRole: authenticatedUser.role,
     });
 
     const skip = (page - 1) * limit;
-    
+
     // Build query using authenticated user's ID from token
     const query = { userId: authenticatedUser._id };
     if (status) {
       query.status = status;
     }
-    
-    console.log('🔐 getUserProducts - Query:', query);
-    
+
+    console.log("🔐 getUserProducts - Query:", query);
+
     const [products, total] = await Promise.all([
       Product.find(query)
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(parseInt(limit))
-        .populate('userId', 'name phone'),
-      Product.countDocuments(query)
+        .populate("userId", "name phone"),
+      Product.countDocuments(query),
     ]);
 
-    console.log('🔐 getUserProducts - Results:', {
+    console.log("🔐 getUserProducts - Results:", {
       productsFound: products.length,
       total,
-      queryUserId: authenticatedUser._id.toString()
+      queryUserId: authenticatedUser._id.toString(),
     });
 
     res.status(200).json({
@@ -290,15 +281,14 @@ const getUserProducts = async (req, res) => {
       currentPage: parseInt(page),
       totalPages: Math.ceil(total / parseInt(limit)),
       total,
-      message: "User products fetched successfully"
+      message: "User products fetched successfully",
     });
-
   } catch (error) {
     console.error("🔐 getUserProducts - Error:", error);
     res.status(500).json({
       status: 500,
       message: "Internal server error",
-      error: error.message
+      error: error.message,
     });
   }
 };
@@ -310,8 +300,7 @@ const productController = {
   updateProduct,
   deleteProduct,
   getProductById,
-  getUserProducts 
-
+  getUserProducts,
 };
 
 module.exports = productController;
