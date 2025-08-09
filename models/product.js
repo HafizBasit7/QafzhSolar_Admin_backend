@@ -17,7 +17,7 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Product type is required'],
     enum: {
-      values: ['Inverter', 'Panel', 'Battery', 'Accessory', 'Cable', 'Controller', 'Monitor', 'Other'],
+      values: ['Inverters', 'Solar Panels', 'Batteries', 'Pane base', 'Accessory', 'Other'],
       message: 'Product type must be one of: Inverter, Panel, Battery, Accessory, Cable, Controller, Monitor, Other'
     }
   },

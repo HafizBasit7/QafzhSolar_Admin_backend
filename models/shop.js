@@ -49,7 +49,8 @@ const shopSchema = new mongoose.Schema({
         trim: true,
         validate: {
             validator: function(v) {
-                return !v || /^https?:\/\/.+/i.test(v);
+                 if (!v) return true;
+                return /^https?:\/\/.+/i.test(v);
             },
             message: 'Website must be a valid URL'
         }
@@ -72,22 +73,23 @@ const shopSchema = new mongoose.Schema({
         trim: true,
         maxLength: [500, 'Address cannot exceed 500 characters']
     },
-    location: {
-        latitude: { 
-            type: Number,
-            min: [-90, 'Latitude must be between -90 and 90'],
-            max: [90, 'Latitude must be between -90 and 90']
-        },
-        longitude: { 
-            type: Number,
-            min: [-180, 'Longitude must be between -180 and 180'],
-            max: [180, 'Longitude must be between -180 and 180']
-        }
-    },
+    // location: {
+    //     latitude: { 
+    //         type: Number,
+    //         min: [-90, 'Latitude must be between -90 and 90'],
+    //         max: [90, 'Latitude must be between -90 and 90']
+    //     },
+    //     longitude: { 
+    //         type: Number,
+    //         min: [-180, 'Longitude must be between -180 and 180'],
+    //         max: [180, 'Longitude must be between -180 and 180']
+    //     }
+    // },
     services: {
         type: [String],
         enum: {
-            values: ['sale', 'install', 'repair', 'maintenance', 'consultation', 'warranty'],
+            values: ['sale', 'install', 'repair', 'maintenance', 'consultation', 'warranty', "design",
+    "inspection"],
             message: 'Invalid service type'
         },
         required: [true, 'At least one service is required'],
@@ -102,7 +104,7 @@ const shopSchema = new mongoose.Schema({
     productCategories: {
         type: [String],
         enum: {
-            values: ['Inverter', 'Panel', 'Battery', 'Accessory', 'Cable', 'Controller', 'Monitor', 'Complete Systems'],
+            values: ['Inverters', 'Solar Panels', 'Batteries', 'Pane base', 'Accessory', 'Other'],
             message: 'Invalid product category'
         },
         default: []
@@ -149,37 +151,45 @@ const shopSchema = new mongoose.Schema({
             default: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday']
         }
     },
-    socialMedia: {
-        facebook: {
-            type: String,
-            default: '',
-            validate: {
-                validator: function(v) {
-                    return !v || /^https?:\/\/(www\.)?facebook\.com\/.+/i.test(v);
-                },
-                message: 'Facebook must be a valid Facebook URL'
-            }
+     socialMedia: {
+    facebook: {
+      type: String,
+      default: '',
+      trim: true,
+      validate: {
+        validator: function(v) {
+          // Only validate if the field has a value
+          if (!v) return true;
+          return /^https?:\/\/(www\.)?(facebook|fb)\.com\/.+/i.test(v);
         },
-        instagram: {
-            type: String,
-            default: '',
-            validate: {
-                validator: function(v) {
-                    return !v || /^https?:\/\/(www\.)?instagram\.com\/.+/i.test(v);
-                },
-                message: 'Instagram must be a valid Instagram URL'
-            }
+        message: props => `${props.value} is not a valid Facebook URL`
+      }
+    },
+    instagram: {
+      type: String,
+      default: '',
+      trim: true,
+      validate: {
+        validator: function(v) {
+          if (!v) return true;
+          return /^https?:\/\/(www\.)?instagram\.com\/.+/i.test(v);
         },
-        twitter: {
-            type: String,
-            default: '',
-            validate: {
-                validator: function(v) {
-                    return !v || /^https?:\/\/(www\.)?twitter\.com\/.+/i.test(v);
-                },
-                message: 'Twitter must be a valid Twitter URL'
-            }
-        }
+        message: props => `${props.value} is not a valid Instagram URL`
+      }
+    },
+    twitter: {
+      type: String,
+      default: '',
+      trim: true,
+      validate: {
+        validator: function(v) {
+          if (!v) return true;
+          return /^https?:\/\/(www\.)?twitter\.com\/.+/i.test(v);
+        },
+        message: props => `${props.value} is not a valid Twitter URL`
+      }
+    }
+  
     },
     logoUrl: {
         type: String,
