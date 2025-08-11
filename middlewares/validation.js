@@ -2,7 +2,7 @@ const { AppError } = require('./errorHandler');
 
 // Validation helper functions
 const isValidPhone = (phone) => {
-  return /^[0-9+()-\s]{10,15}$/.test(phone);
+  return /^[0-9+()-\s]{8,15}$/.test(phone);
 };
 
 const isValidEmail = (email) => {
